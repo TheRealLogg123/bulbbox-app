@@ -1134,6 +1134,10 @@ var beepbox = (function (exports) {
         { name: "quasi-sine", samples: generateQuasiSineWave() },
         { name: "half-sine", samples: generateSemisineWave() },
         { name: "broken white noise", samples: generateWhiteNoiseFmWave() },
+        { name: "absine", samples: generateAbsSineWave() },
+        { name: "sharksine", samples: generateQuarterSineWave() },
+        { name: "fastsine", samples: generateSquishedSineWave() },
+        { name: "camelsine", samples: generateSquishedAbsSineWave() },
     ]);
     Config.pwmOperatorWaves = toNameMap([
         { name: "1%", samples: generateSquareWave(0.01) },
@@ -1715,6 +1719,50 @@ var beepbox = (function (exports) {
         const wave = new Float32Array(Config.sineWaveLength + 1);
         for (let i = 0; i < Config.sineWaveLength + 1; i++) {
             wave[i] = Math.round(Math.sin(i * Math.PI * 2.0 / Config.sineWaveLength));
+        }
+        return wave;
+    }
+    function generateAbsSineWave() {
+        const wave = new Float32Array(Config.sineWaveLength + 1);
+        for (let i = 0; i < Config.sineWaveLength + 1; i++) {
+            wave[i] = Math.abs(Math.sin(i * Math.PI * 2.0 / Config.sineWaveLength));
+        }
+        return wave;
+    }
+    function generateQuarterSineWave() {
+        const wave = new Float32Array(Config.sineWaveLength + 1);
+        for (let i = 0; i < Config.sineWaveLength + 1; i++) {
+            let q = Math.floor((i * 4) / Config.sineWaveLength);
+            if (q == 0 || q == 2) {
+                wave[i] = Math.abs(Math.sin(i * Math.PI * 2.0 / Config.sineWaveLength));
+            }
+            else {
+                wave[i] = 0;
+            }
+        }
+        return wave;
+    }
+    function generateSquishedSineWave() {
+        const wave = new Float32Array(Config.sineWaveLength + 1);
+        for (let i = 0; i < Config.sineWaveLength + 1; i++) {
+            if (i < Config.sineWaveLength / 2) {
+                wave[i] = Math.sin(2 * i * Math.PI * 2.0 / Config.sineWaveLength);
+            }
+            else {
+                wave[i] = 0;
+            }
+        }
+        return wave;
+    }
+    function generateSquishedAbsSineWave() {
+        const wave = new Float32Array(Config.sineWaveLength + 1);
+        for (let i = 0; i < Config.sineWaveLength + 1; i++) {
+            if (i < Config.sineWaveLength / 2) {
+                wave[i] = Math.abs(Math.sin(2 * i * Math.PI * 2.0 / Config.sineWaveLength));
+            }
+            else {
+                wave[i] = 0;
+            }
         }
         return wave;
     }
